@@ -152,6 +152,29 @@
   }
 }
 
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  .pagination__btn--prev {
+    margin-right: auto;
+  }
+
+  .pages__number {
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+  }
+
+  .pagination__btn--next {
+    margin-left: auto;
+  }
+}
+
 .heading--2 {
   font-size: 2rem;
   font-weight: 700;

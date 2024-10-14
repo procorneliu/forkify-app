@@ -19,13 +19,18 @@ class PaginationView extends View {
     const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
 
     // page 1, there is other pages
-    if (curPage === 1 && numPages > 1) return this._generateMarkupNext(curPage);
+    if (curPage === 1 && numPages > 1)
+      return this._generatePagesCount(curPage, numPages).concat(this._generateMarkupNext(curPage));
 
     // last page
-    if (curPage === numPages && numPages > 1) return this._generateMarkupPrev(curPage);
+    if (curPage === numPages && numPages > 1)
+      return this._generateMarkupPrev(curPage).concat(this._generatePagesCount(curPage, numPages));
 
     // other page
-    if (curPage > 1) return this._generateMarkupPrev(curPage).concat(this._generateMarkupNext(curPage));
+    if (curPage > 1)
+      return this._generateMarkupPrev(curPage)
+        .concat(this._generatePagesCount(curPage, numPages))
+        .concat(this._generateMarkupNext(curPage));
 
     // no more pages
     return '';
@@ -51,6 +56,14 @@ class PaginationView extends View {
                 </svg>
             </button>
         `;
+  }
+
+  _generatePagesCount(curPage, totalPages) {
+    return `
+            <div>
+                <h2 class="pages__number">${curPage}/${totalPages}</h2>
+            </div> 
+    `;
   }
 }
 
