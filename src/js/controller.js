@@ -10,6 +10,7 @@ import addRecipeView from './views/addRecipeView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import 'fractional';
 
 if (module.hot) {
   module.hot.accept();
