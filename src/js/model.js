@@ -111,16 +111,28 @@ init();
 export const uploadRecipe = async function (newRecipe) {
   try {
     const ingredients = Object.entries(newRecipe)
-      .filter(entry => entry[0].startsWith('ingredient') && entry[1] !== '')
-      .map(ing => {
-        const ingArr = ing[1].split(',').map(el => el.trim());
+      .filter(entry => {
+        return (
+          entry[0].startsWith('ingredient') &&
+          (entry[0].includes('_quantity') || entry[0].includes('_unit') || entry[0].includes('_description')) &&
+          entry[1] !== ''
+        );
+      })
+      .reduce((acc, key) => {
+        const match = key[0].match(/ingredient(-\d+)(_quantity|_unit|_description)/);
 
-        if (ingArr.length !== 3) throw new Error('Wrong data format. Please enter correct one!');
+        const index = match[1].replace('-', '') - 1;
+        const type = match[2].replace('_', '');
 
-        const [quantity, unit, description] = ingArr;
+        if (!acc[index]) acc[index] = { quantity: null, unit: '', description: '' };
 
-        return { quantity: quantity ? +quantity : null, unit, description };
-      });
+        acc[index][type] = key[1];
+
+        return acc;
+      }, []);
+
+    // console.log(ingredients);
+
     const recipe = {
       title: newRecipe.title,
       source_url: newRecipe.sourceUrl,
@@ -130,12 +142,46 @@ export const uploadRecipe = async function (newRecipe) {
       servings: +newRecipe.servings,
       ingredients,
     };
-
     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
     state.recipe = createRecipeObject(data);
     addBookmark(state.recipe);
-    console.log(state.recipe);
   } catch (err) {
     throw err;
   }
 };
+
+// export const uploadRecipe = async function (newRecipe) {
+//   try {
+//     const ingredients = Object.entries(newRecipe)
+//       .filter(entry => {
+//         entry[0].startsWith('ingredient') && entry[1] !== '';
+//         console.log(entry);
+//       })
+//       .map(ing => {
+//         const ingArr = ing[1].split(',').map(el => el.trim());
+//         // console.log(ingArr);
+
+//         if (ingArr.length !== 3) throw new Error('Wrong data format. Please enter correct one!');
+
+//         const [quantity, unit, description] = ingArr;
+
+//         return { quantity: quantity ? +quantity : null, unit, description };
+//       });
+//     const recipe = {
+//       title: newRecipe.title,
+//       source_url: newRecipe.sourceUrl,
+//       image_url: newRecipe.image,
+//       publisher: newRecipe.publisher,
+//       cooking_time: +newRecipe.cookingTime,
+//       servings: +newRecipe.servings,
+//       ingredients,
+//     };
+
+//     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
+//     state.recipe = createRecipeObject(data);
+//     addBookmark(state.recipe);
+//     // console.log(state.recipe);
+//   } catch (err) {
+//     throw err;
+//   }
+// };

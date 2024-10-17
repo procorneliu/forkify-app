@@ -97,3 +97,35 @@
     justify-self: center;
   }
 }
+
+.default_option {
+  color: #fff;
+}
+
+// .error__message {
+//   // Positioning
+//   position: absolute;
+//   top: 6%;
+//   left: 45%;
+//   display: flex;
+
+//   // Styling
+//   background-color: $color-grey-light-1;
+//   color: $color-grey-dark-1;
+//   padding: 1.5rem 4rem 1.5rem 4rem;
+//   font-family: inherit;
+//   font-size: 15px;
+//   border-radius: 5px;
+//   animation-delay: 5s;
+//   opacity: 1;
+//   transition: opacity 2s ease;
+
+//   button {
+//     position: absolute;
+//     right: 5%;
+//     top: 12%;
+//     cursor: pointer;
+//     border: none;
+//     background: none;
+//   }
+// }

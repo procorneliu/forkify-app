@@ -234,3 +234,21 @@
     font-weight: 600;
   }
 }
+
+.upload {
+  display: flex;
+  align-items: flex-start;
+
+  .ingredients {
+    gap: 5px;
+    display: flex;
+
+    input {
+      width: 100%;
+    }
+
+    input::placeholder {
+      font-size: 13px;
+    }
+  }
+}
