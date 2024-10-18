@@ -25,10 +25,15 @@ const controlRecipes = async function () {
 
     resultsView.update(model.getSearchResultsPage());
     bookmarksView.update(model.state.bookmarks);
-
     await model.loadRecipe(id);
 
+    // getting recipe nutrition data from recipe title
+    await model.recipeNutritionData(model.state.recipe.title.split(' ')[0]);
+
     recipeView.render(model.state.recipe);
+
+    // Getting chart rendered at the end of recipe page load
+    recipeView.generateNutritionChart();
   } catch (err) {
     console.log(err);
     recipeView.renderError();
@@ -107,6 +112,15 @@ const controlAddRecipe = async function (addRecipe) {
     addRecipeView.renderError(err.message);
   }
 };
+
+// const getDataNutrition = async function () {
+//   try {
+//     await model.recipeNutritionData('pizza');
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// };
+// getDataNutrition();
 
 const init = function () {
   bookmarksView.addHandlerRender(controlBookmarksStorage);

@@ -17,11 +17,7 @@
       position: absolute;
       top: 0;
       left: 0;
-      background-image: linear-gradient(
-        to right bottom,
-        $color-grad-1,
-        $color-grad-2
-      );
+      background-image: linear-gradient(to right bottom, $color-grad-1, $color-grad-2);
       opacity: 0.6;
     }
   }
@@ -50,11 +46,7 @@
       -webkit-box-decoration-break: clone;
       box-decoration-break: clone;
       padding: 1.3rem 2rem;
-      background-image: linear-gradient(
-        to right bottom,
-        $color-grad-1,
-        $color-grad-2
-      );
+      background-image: linear-gradient(to right bottom, $color-grad-1, $color-grad-2);
     }
 
     @media only screen and (max-width: $bp-medium) {
@@ -164,6 +156,43 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    background-color: $color-grey-light-2;
+  }
+
+  &__nutrition {
+    padding: 5rem 10rem;
+
+    .nutrition__data {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      flex-direction: row;
+
+      .nutrition__quantity {
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        text-align: center;
+
+        color: $color-grey-dark-1;
+        font-size: 16px;
+        span {
+          font-weight: 700;
+        }
+
+        hr {
+          margin: 15px 0;
+        }
+
+        .calories__text {
+          font-size: 24px;
+        }
+
+        .calories__data {
+          font-size: 22px;
+        }
+      }
+    }
   }
 
   &__directions-text {
@@ -176,4 +205,9 @@
   &__publisher {
     font-weight: 700;
   }
+}
+
+#nutrition_chart {
+  max-width: 250px;
+  max-height: 250px;
 }

@@ -1,4 +1,4 @@
-import { API_URL, RES_PER_PAGE, KEY } from './config.js';
+import { API_URL, API_2_URL, RES_PER_PAGE, KEY_API_1, KEY_API_2 } from './config.js';
 import { AJAX } from './helpers.js';
 
 export const state = {
@@ -29,7 +29,7 @@ const createRecipeObject = function (data) {
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await AJAX(`${API_URL}${id}?key=${KEY}`);
+    const data = await AJAX(`${API_URL}${id}?key=${KEY_API_1}`);
 
     state.recipe = createRecipeObject(data);
 
@@ -44,7 +44,7 @@ export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
 
-    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY}`);
+    const data = await AJAX(`${API_URL}?search=${query}&key=${KEY_API_1}`);
 
     state.search.results = data.data.recipes.map(rec => {
       return {
@@ -142,7 +142,7 @@ export const uploadRecipe = async function (newRecipe) {
       servings: +newRecipe.servings,
       ingredients,
     };
-    const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
+    const data = await AJAX(`${API_URL}?key=${KEY_API_1}`, recipe);
     state.recipe = createRecipeObject(data);
     addBookmark(state.recipe);
   } catch (err) {
@@ -177,7 +177,7 @@ export const uploadRecipe = async function (newRecipe) {
 //       ingredients,
 //     };
 
-//     const data = await AJAX(`${API_URL}?key=${KEY}`, recipe);
+//     const data = await AJAX(`${API_URL}?key=${KEY_API_1}`, recipe);
 //     state.recipe = createRecipeObject(data);
 //     addBookmark(state.recipe);
 //     // console.log(state.recipe);
@@ -185,3 +185,32 @@ export const uploadRecipe = async function (newRecipe) {
 //     throw err;
 //   }
 // };
+
+export const recipeNutritionData = async function (query) {
+  try {
+    // Getting recipe id
+    const recipeID = await AJAX(`${API_2_URL}recipes/complexSearch?query=${query}&number=1&includeNutrition=true&apiKey=${KEY_API_2}`);
+
+    const id = recipeID.results[0].id;
+
+    // // Search for product nutrients information
+    const productData = await AJAX(`${API_2_URL}recipes/${id}/nutritionWidget.json?apiKey=${KEY_API_2}`);
+
+    const nutritionData = {
+      calories: productData.calories,
+      carbs: productData.carbs,
+      fat: productData.fat,
+      protein: productData.protein,
+      caloricBreakdown: {
+        percentCarbs: productData.caloricBreakdown.percentCarbs,
+        percentFat: productData.caloricBreakdown.percentFat,
+        percentProtein: productData.caloricBreakdown.percentProtein,
+      },
+    };
+
+    // Save nutrition data in recipe object
+    state.recipe.nutrition = nutritionData;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
