@@ -80,7 +80,7 @@
                   </svg>
                   <span class="shop__count">0</span>
                 </div>
-                <span>Shop List</span>
+                <span>Shopping</span>
               </button>
               <div class="shop">
                 <ul class="shop__list">
@@ -95,26 +95,6 @@
 
                   <!-- <li>
                      <p><span class="remove__ingredient">&#10005;</span><span>125 g</span> ball mozzarella torn into pieces</p>
-                    <hr />
-                  </li>
-                  <li>
-                    <p><span class="remove__ingredient">&#10005;</span><span>2 package</span> cream cheese softened</p>
-                    <hr />
-                  </li>
-                  <li>
-                    <p><span class="remove__ingredient">&#10005;</span><span>1 tsp</span> garlic salt</p>
-                    <hr />
-                  </li>
-                  <li>
-                    <p><span class="remove__ingredient">&#10005;</span><span>1/4</span> small onion finely chopped</p>
-                    <hr />
-                  </li>
-                  <li>
-                    <p><span class="remove__ingredient">&#10005;</span><span>1 cup</span> halved and thinly-sliced radishes</p>
-                    <hr />
-                  </li>
-                  <li>
-                    <p><span class="remove__ingredient">&#10005;</span><span>1/2 cups</span> fresh broccoli chopped</p>
                     <hr />
                   </li> -->
                   <!-- <div class="shop__btn">
@@ -131,6 +111,14 @@
                   </div> -->
                 </ul>
               </div>
+            </li>
+            <li class="nav__item">
+              <button class="nav__btn nav__btn--schedule-calendar">
+                <svg class="nav__icon">
+                  <use href="src/img/icons.svg#icon-calendar"></use>
+                </svg>
+                <span>Schedule</span>
+              </button>
             </li>
           </ul>
         </nav>
@@ -322,9 +310,9 @@
       <p>Incorrect data format</p>
       <button>&times;</button>
     </div> -->
-    <div class="overlay hidden"></div>
+    <div class="overlay__add-recipe hidden"></div>
     <div class="add-recipe-window hidden">
-      <button class="btn--close-modal">&times;</button>
+      <button class="btn__close--add-recipe">&times;</button>
       <form class="upload">
         <div class="upload__column">
           <h3 class="upload__heading">Recipe data</h3>
@@ -414,6 +402,54 @@
           <span>Upload</span>
         </button>
       </form>
+    </div>
+
+    <div class="overlay-schedule hidden"></div>
+    <div class="schedule-calendar-window hidden">
+      <button class="btn--close-schedule">&times;</button>
+      <div class="schedule">
+        <div class="schedule__container">
+          <ul class="schedule__list">
+            <!-- <div class="message">
+              <div>
+                <svg>
+                  <use href="src/img/icons.svg#icon-smile"></use>
+                </svg>
+              </div>
+              <p>No recipe scheduled yet...</p>
+            </div> -->
+
+            <li class="preview draggable__el">
+              <a class="preview__link" href="#23456">
+                <figure class="preview__fig">
+                  <img
+                    src="https://hips.hearstapps.com/hmg-prod/images/fruit-pizza-1-64429f5507300.jpg?crop=1xw:1xh;center,top&resize=980:*"
+                    alt="Test"
+                  />
+                </figure>
+                <div class="preview__data">
+                  <h4 class="preview__name">Pasta with Tomato Cream...</h4>
+                </div>
+              </a>
+            </li>
+
+            <li class="preview draggable__el">
+              <a class="preview__link" href="#23456">
+                <figure class="preview__fig">
+                  <img
+                    src="https://hips.hearstapps.com/hmg-prod/images/fruit-pizza-1-64429f5507300.jpg?crop=1xw:1xh;center,top&resize=980:*"
+                    alt="Test"
+                  />
+                </figure>
+                <div class="preview__data">
+                  <h4 class="preview__name">Pasta with Tomato Cream...</h4>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div id="calendar"></div>
+      </div>
     </div>
   </body>
 </html>

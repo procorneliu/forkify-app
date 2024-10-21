@@ -1,13 +1,15 @@
+@use 'base';
+
 .header {
   grid-area: head;
-  background-color: $color-grey-light-1;
+  background-color: base.$color-grey-light-1;
   display: flex;
   align-items: center;
   justify-content: space-between;
 
   &__logo {
     margin-left: 4rem;
-    height: 4.6rem;
+    height: 4rem;
     display: block;
   }
 }
@@ -22,7 +24,7 @@
 
   &:focus-within {
     transform: translateY(-2px);
-    box-shadow: 0 0.7rem 3rem rgba($color-grey-dark-1, 0.08);
+    box-shadow: 0 0.7rem 3rem rgba(base.$color-grey-dark-1, 0.08);
   }
 
   &__field {
@@ -30,18 +32,18 @@
     background: none;
     font-family: inherit;
     color: inherit;
-    font-size: 1.7rem;
-    width: 30rem;
+    font-size: 1.5rem;
+    width: 25rem;
 
     &:focus {
       outline: none;
     }
 
     &::placeholder {
-      color: $color-grey-light-3;
+      color: base.$color-grey-light-3;
     }
 
-    @media only screen and (max-width: $bp-medium) {
+    @media only screen and (max-width: base.$bp-medium) {
       width: auto;
 
       &::placeholder {
@@ -52,7 +54,9 @@
 
   &__btn {
     font-weight: 600;
+    font-size: 1.3rem;
     font-family: inherit;
+    padding: 1.3rem;
   }
 }
 
@@ -89,7 +93,7 @@
     svg {
       height: 2.4rem;
       width: 2.4rem;
-      fill: $color-primary;
+      fill: base.$color-primary;
       margin-right: 0.7rem;
       transform: translateY(-1px);
     }
@@ -99,7 +103,7 @@
     }
 
     &:hover {
-      background-color: $color-grey-light-2;
+      background-color: base.$color-grey-light-2;
     }
   }
 }
@@ -112,14 +116,14 @@
   z-index: 10;
   width: 40rem;
   background-color: #fff;
-  box-shadow: 0 0.8rem 5rem 2rem rgba($color-grey-dark-1, 0.1);
+  box-shadow: 0 0.8rem 5rem 2rem rgba(base.$color-grey-dark-1, 0.1);
 
   visibility: hidden;
   opacity: 0;
   transition: all 0.1s 0.05s;
 
   max-height: 45rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &__list {
     list-style: none;
@@ -135,7 +139,7 @@
     transition: all 0.3s;
 
     &:hover {
-      background-color: $color-grey-light-2;
+      background-color: base.$color-grey-light-2;
     }
   }
 
@@ -154,14 +158,14 @@
   z-index: 10;
   width: 40rem;
   background-color: #fff;
-  box-shadow: 0 0.8rem 5rem 2rem rgba($color-grey-dark-1, 0.1);
+  box-shadow: 0 0.8rem 5rem 2rem rgba(base.$color-grey-dark-1, 0.1);
 
   visibility: hidden;
   opacity: 0;
   transition: all 0.1s 0.05s;
 
   max-height: 45rem;
-  overflow-y: scroll;
+  overflow-y: auto;
 
   &__list {
     list-style: none;
@@ -171,7 +175,7 @@
     width: 100%;
 
     .remove__ingredient {
-      color: $color-grad-2;
+      color: base.$color-grad-2;
       margin: 0 0.5rem;
       cursor: pointer;
     }
@@ -191,11 +195,11 @@
       margin-top: 2rem;
 
       &__clear {
-        color: $color-grad-2;
-        background: $color-grey-light-1;
+        color: base.$color-grad-2;
+        background: base.$color-grey-light-1;
 
         &:hover {
-          background: $color-grey-light-2;
+          background: base.$color-grey-light-2;
         }
       }
     }
@@ -211,7 +215,7 @@
     transition: all 0.3s;
 
     &:hover {
-      background-color: $color-grey-light-2;
+      background-color: base.$color-grey-light-2;
     }
   }
 

@@ -12,7 +12,7 @@
   z-index: 1000;
   transition: all 0.5s;
 
-  .btn--close-modal {
+  .btn__close--add-recipe {
     font-family: inherit;
     color: inherit;
     position: absolute;
@@ -25,7 +25,7 @@
   }
 }
 
-.overlay {
+.overlay__add-recipe {
   position: fixed;
   top: 0;
   left: 0;
