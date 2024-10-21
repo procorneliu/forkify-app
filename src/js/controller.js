@@ -7,13 +7,14 @@ import searchView from './views/searchView.js';
 import paginationView from './views/paginationView.js';
 import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
+import shoppingListView from './views/shoppingListView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 const controlRecipes = async function () {
   try {
@@ -28,12 +29,12 @@ const controlRecipes = async function () {
     await model.loadRecipe(id);
 
     // getting recipe nutrition data from recipe title
-    await model.recipeNutritionData(model.state.recipe.title.split(' ')[0]);
+    // await model.recipeNutritionData(model.state.recipe.title.split(' ')[0]);
 
     recipeView.render(model.state.recipe);
 
     // Getting chart rendered at the end of recipe page load
-    recipeView.generateNutritionChart();
+    // recipeView.generateNutritionChart();
   } catch (err) {
     console.log(err);
     recipeView.renderError();
@@ -90,8 +91,6 @@ const controlBookmarksStorage = function () {
 
 const controlAddRecipe = async function (addRecipe) {
   try {
-    console.log(addRecipe);
-
     addRecipeView.renderSpinner();
 
     await model.uploadRecipe(addRecipe);
@@ -113,6 +112,33 @@ const controlAddRecipe = async function (addRecipe) {
   }
 };
 
+const controlShopList = function () {
+  model.addIngredients(model.state.recipe.ingredients);
+  // console.log(model.state.recipe.ingredients);
+
+  shoppingListView.render(model.state.ingredientsList);
+};
+
+const deleteShopListElement = function (index, length) {
+  model.deleteIngredient(index);
+
+  if (length === 0) shoppingListView.renderMessage();
+};
+
+const deleteAllShopList = function () {
+  model.deleteIngredient(0, model.state.ingredientsList.length);
+
+  shoppingListView.renderMessage();
+};
+
+const controlIngredientsStorage = function () {
+  // Loading ingredients list from storage
+  shoppingListView.render(model.state.ingredientsList);
+
+  // Add event listener at page load
+  shoppingListView.addHandlerClearList(deleteAllShopList);
+};
+
 // const getDataNutrition = async function () {
 //   try {
 //     await model.recipeNutritionData('pizza');
@@ -130,5 +156,8 @@ const init = function () {
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);
+  recipeView.addHandlerAddToShop(controlShopList);
+  shoppingListView.addHandlerDeleteIngredient(deleteShopListElement);
+  shoppingListView.addHandlerRender(controlIngredientsStorage);
 };
 init();

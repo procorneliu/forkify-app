@@ -30,6 +30,37 @@ class RecipeView extends View {
     });
   }
 
+  addHandlerAddToShop(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn__add--shop');
+      if (!btn) return;
+
+      const html = `
+        <span>Added to list</span>
+        <svg class="search__icon">„
+          <use href="${icons}#icon-check"></use>
+        </svg>`;
+
+      btn.setAttribute('disabled', 'disabled');
+      btn.innerHTML = '';
+      btn.insertAdjacentHTML('afterbegin', html);
+
+      setTimeout(function () {
+        const html = `
+          <span>Add to shopping list</span>
+          <svg class="search__icon">„
+            <use href="${icons}#icon-plus-circle"></use>
+          </svg>`;
+
+        btn.removeAttribute('disabled');
+        btn.innerHTML = '';
+        btn.insertAdjacentHTML('afterbegin', html);
+      }, 500);
+
+      handler();
+    });
+  }
+
   _generateMarkup() {
     return `
       <figure class="recipe__fig">
@@ -95,11 +126,7 @@ class RecipeView extends View {
           <span class="recipe__publisher">${this._data.publisher}</span>. Please check out
           directions at their website.
         </p>
-        <a
-          class="btn--small recipe__btn"
-          href="${this._data.sourceUrl}"
-          target="_blank"
-        >
+        <a class="btn--small recipe__btn" href="${this._data.sourceUrl}" target="_blank">
           <span>Directions</span>
           <svg class="search__icon">
             <use href="${icons}#icon-arrow-right"></use>
@@ -130,40 +157,67 @@ class RecipeView extends View {
           <canvas id="nutrition_chart"></canvas>
           <div class="nutrition__quantity">
             <p class="calories__text">Calories:</p>
-            <span class="calories__data">${this._data.nutrition.calories}</span>
+            <span class="calories__data">1</span>
             <hr>
-            <p>Carbs: <span>${this._data.nutrition.carbs} - ${this._data.nutrition.caloricBreakdown.percentCarbs}%</span></p>
-            <p>Fat: <span>${this._data.nutrition.fat} - ${this._data.nutrition.caloricBreakdown.percentFat}%</span></p>
-            <p>Protein: <span>${this._data.nutrition.protein} - ${this._data.nutrition.caloricBreakdown.percentProtein}%</span></p>
+            <p>Carbs: <span>2</span></p>
+            <p>Fat: <span>3</span></p>
+            <p>Protein: <span>4</span></p>
           </div>
         </div>
+        <button class="btn--small recipe__btn btn__add--shop">
+          <span>Add to shopping list</span>
+          <svg class="search__icon">„
+            <use href="${icons}#icon-plus-circle"></use>
+          </svg>
+        </button>
       </div>`;
   }
+  // _generateMarkupNutrition() {
+  //   return `
+  //     <div class="recipe__nutrition">
+  //       <h2 class="heading--2">Nutrition Data</h2>
+  //       <div class="nutrition__data">
+  //         <canvas id="nutrition_chart"></canvas>
+  //         <div class="nutrition__quantity">
+  //           <p class="calories__text">Calories:</p>
+  //           <span class="calories__data">${this._data.nutrition.calories}</span>
+  //           <hr>
+  //           <p>Carbs: <span>${this._data.nutrition.carbs} - ${this._data.nutrition.caloricBreakdown.percentCarbs}%</span></p>
+  //           <p>Fat: <span>${this._data.nutrition.fat} - ${this._data.nutrition.caloricBreakdown.percentFat}%</span></p>
+  //           <p>Protein: <span>${this._data.nutrition.protein} - ${this._data.nutrition.caloricBreakdown.percentProtein}%</span></p>
+  //         </div>
+  //       </div>
+  //     </div>`;
+  // }
 
-  generateNutritionChart() {
-    const _canvas = document.getElementById('nutrition_chart');
+  // generateNutritionChart() {
+  //   const _canvas = document.getElementById('nutrition_chart');
 
-    // Get rid of error reusing canvas
-    if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
+  //   // Get rid of error reusing canvas
+  //   if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
 
-    const chart = new Chart(_canvas, {
-      type: 'doughnut',
-      data: {
-        labels: ['Carbs', 'Fat', 'Protein'],
-        datasets: [
-          {
-            label: 'Nutrition Breakdown',
-            data: [10, 20, 70],
-            backgroundColor: ['#d3c7c3', '#f48982', '#fbdb89'],
-            hoverOffset: 4,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-      },
-    });
-  }
+  //   const chart = new Chart(_canvas, {
+  //     type: 'doughnut',
+  //     data: {
+  //       labels: ['Carbs', 'Fat', 'Protein'],
+  //       datasets: [
+  //         {
+  //           label: 'Nutrition Breakdown',
+  //           data: [
+  //             this._data.nutrition.caloricBreakdown.percentCarbs,
+  //             this._data.nutrition.caloricBreakdown.percentFat,
+  //             this._data.nutrition.caloricBreakdown.percentProtein,
+  //           ],
+  //           backgroundColor: ['#d3c7c3', '#f48982', '#fbdb89'],
+  //           hoverOffset: 4,
+  //         },
+  //       ],
+  //     },
+  //     options: {
+  //       responsive: true,
+  //     },
+  //   });
+  // }
 }
 
 export default new RecipeView();

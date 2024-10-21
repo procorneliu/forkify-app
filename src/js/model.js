@@ -10,6 +10,7 @@ export const state = {
     results: [],
   },
   bookmarks: [],
+  ingredientsList: [],
 };
 
 const createRecipeObject = function (data) {
@@ -101,10 +102,42 @@ export const deleteBookmark = function (id) {
   localStorageBookmarks();
 };
 
-const init = function () {
-  const storage = localStorage.getItem('bookmarks');
+const localStorageIngredients = function () {
+  if (!state.ingredientsList) return;
+  localStorage.setItem('ingredients', JSON.stringify(state.ingredientsList));
+};
 
-  if (storage) state.bookmarks = JSON.parse(storage);
+// export const addIngredients = function (ingredients) {
+//   state.ingredientsList.push(...ingredients);
+
+//   localStorageIngredients();
+// };
+
+export const addIngredients = function (ingredients) {
+  console.log(ingredients);
+  ingredients.forEach((ing, i) => {
+    const existingElement = state.ingredientsList.find(el => el.description === ing.description);
+
+    if (existingElement) {
+      existingElement.quantity += ing.quantity;
+    } else state.ingredientsList.push({ ...ing });
+  });
+
+  localStorageIngredients();
+};
+
+export const deleteIngredient = function (index, lastIndex = 1) {
+  state.ingredientsList.splice(index, lastIndex);
+
+  localStorageIngredients();
+};
+
+const init = function () {
+  const storageBookmarks = localStorage.getItem('bookmarks');
+  const storageIngredients = localStorage.getItem('ingredients');
+
+  if (storageBookmarks) state.bookmarks = JSON.parse(storageBookmarks);
+  if (storageIngredients) state.ingredientsList = JSON.parse(storageIngredients);
 };
 init();
 
@@ -186,31 +219,31 @@ export const uploadRecipe = async function (newRecipe) {
 //   }
 // };
 
-export const recipeNutritionData = async function (query) {
-  try {
-    // Getting recipe id
-    const recipeID = await AJAX(`${API_2_URL}recipes/complexSearch?query=${query}&number=1&includeNutrition=true&apiKey=${KEY_API_2}`);
+// export const recipeNutritionData = async function (query) {
+//   try {
+//     // Getting recipe id
+//     const recipeID = await AJAX(`${API_2_URL}recipes/complexSearch?query=${query}&number=1&includeNutrition=true&apiKey=${KEY_API_2}`);
 
-    const id = recipeID.results[0].id;
+//     const id = recipeID.results[0].id;
 
-    // // Search for product nutrients information
-    const productData = await AJAX(`${API_2_URL}recipes/${id}/nutritionWidget.json?apiKey=${KEY_API_2}`);
+//     // // Search for product nutrients information
+//     const productData = await AJAX(`${API_2_URL}recipes/${id}/nutritionWidget.json?apiKey=${KEY_API_2}`);
 
-    const nutritionData = {
-      calories: productData.calories,
-      carbs: productData.carbs,
-      fat: productData.fat,
-      protein: productData.protein,
-      caloricBreakdown: {
-        percentCarbs: productData.caloricBreakdown.percentCarbs,
-        percentFat: productData.caloricBreakdown.percentFat,
-        percentProtein: productData.caloricBreakdown.percentProtein,
-      },
-    };
+//     const nutritionData = {
+//       calories: productData.calories,
+//       carbs: productData.carbs,
+//       fat: productData.fat,
+//       protein: productData.protein,
+//       caloricBreakdown: {
+//         percentCarbs: productData.caloricBreakdown.percentCarbs,
+//         percentFat: productData.caloricBreakdown.percentFat,
+//         percentProtein: productData.caloricBreakdown.percentProtein,
+//       },
+//     };
 
-    // Save nutrition data in recipe object
-    state.recipe.nutrition = nutritionData;
-  } catch (err) {
-    console.log(err.message);
-  }
-};
+//     // Save nutrition data in recipe object
+//     state.recipe.nutrition = nutritionData;
+//   } catch (err) {
+//     console.log(err.message);
+//   }
+// };
