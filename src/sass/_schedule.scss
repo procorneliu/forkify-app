@@ -36,6 +36,7 @@
 
           cursor: move;
         }
+
         &__data {
           display: flex;
           color: base.$color-grey-dark-1;
@@ -121,6 +122,11 @@
   &-button-primary {
     font-size: 1.4rem !important;
   }
+}
+
+.draggable__el {
+  list-style: none;
+  width: 20rem;
 }
 
 :root {
