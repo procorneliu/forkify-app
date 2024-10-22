@@ -1,3 +1,5 @@
+@use 'base';
+
 .schedule-calendar-window {
   position: fixed;
   top: 50%;
@@ -22,12 +24,12 @@
     }
 
     &__container {
-      border: 1px solid $color-grey-light-2;
+      border: 1px solid base.$color-grey-light-2;
       border-radius: 0.2rem;
       z-index: 2;
 
       .preview {
-        border-bottom: 1px solid $color-grey-light-2;
+        border-bottom: 1px solid base.$color-grey-light-2;
 
         &__link {
           padding: 1rem;
@@ -36,7 +38,7 @@
         }
         &__data {
           display: flex;
-          color: $color-grey-dark-1;
+          color: base.$color-grey-dark-1;
         }
       }
     }
@@ -82,7 +84,7 @@
 
 // Calendar styles
 .fc {
-  color: $color-grey-dark-1;
+  color: base.$color-grey-dark-1;
 
   &-sticky {
     display: flex !important;
@@ -94,7 +96,7 @@
     padding: 1rem !important;
     height: 70px;
 
-    background-color: $color-grad-2;
+    background-color: base.$color-grad-2;
   }
 
   &-list-event-time {
@@ -105,7 +107,7 @@
     &,
     &:link,
     &:visited {
-      @extend %btn;
+      @extend %btn !optional;
 
       font-size: 1.4rem;
       font-weight: 600;
@@ -125,5 +127,5 @@
   --fc-button-active-border-color: none;
   --fc-button-border-color: none;
   --fc-event-border-color: #f48982;
-  --fc-event-bg-color: $color-grad-2;
+  --fc-event-bg-color: base.$color-grad-2;
 }

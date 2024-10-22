@@ -57,7 +57,7 @@ class ShoppingListView extends View {
             <span>Clear list</span>
             </button>
             <button class="btn--small recipe__btn buy--now">
-            <svg>
+            <svg class="search__icon">
                 <use href="${icons}#icon-buy"></use>
             </svg>
             <span>Buy Now</span>

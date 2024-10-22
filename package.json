@@ -21,6 +21,7 @@
     "@parcel/transformer-sass": "^2.12.0",
     "buffer": "^6.0.3",
     "querystring-es3": "^0.2.1",
-    "sass": "^1.80.3"
+    "sass": "^1.80.3",
+    "sass-loader": "^16.0.2"
   }
 }

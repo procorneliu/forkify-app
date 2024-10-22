@@ -37,7 +37,7 @@ class RecipeView extends View {
 
       const html = `
         <span>Added to list</span>
-        <svg class="search__icon">„
+        <svg class="search__icon">
           <use href="${icons}#icon-check"></use>
         </svg>`;
 
@@ -48,7 +48,7 @@ class RecipeView extends View {
       setTimeout(function () {
         const html = `
           <span>Add to shopping list</span>
-          <svg class="search__icon">„
+          <svg class="search__icon">
             <use href="${icons}#icon-plus-circle"></use>
           </svg>`;
 
@@ -166,7 +166,7 @@ class RecipeView extends View {
         </div>
         <button class="btn--small recipe__btn btn__add--shop">
           <span>Add to shopping list</span>
-          <svg class="search__icon">„
+          <svg class="search__icon">
             <use href="${icons}#icon-plus-circle"></use>
           </svg>
         </button>

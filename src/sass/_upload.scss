@@ -1,3 +1,5 @@
+@use 'base';
+
 .add-recipe-window {
   position: fixed;
   top: 50%;
@@ -67,13 +69,13 @@
       transition: all 0.2s;
 
       &::placeholder {
-        color: $color-grey-light-3;
+        color: base.$color-grey-light-3;
       }
 
       &:focus {
         outline: none;
-        border: 1px solid $color-primary;
-        background-color: $color-grey-light-1;
+        border: 1px solid base.$color-primary;
+        background-color: base.$color-grey-light-1;
       }
     }
 
@@ -102,30 +104,30 @@
   color: #fff;
 }
 
-// .error__message {
-//   // Positioning
-//   position: absolute;
-//   top: 6%;
-//   left: 45%;
-//   display: flex;
+.error__message {
+  // Positioning
+  position: absolute;
+  top: 6%;
+  left: 45%;
+  display: flex;
 
-//   // Styling
-//   background-color: $color-grey-light-1;
-//   color: $color-grey-dark-1;
-//   padding: 1.5rem 4rem 1.5rem 4rem;
-//   font-family: inherit;
-//   font-size: 15px;
-//   border-radius: 5px;
-//   animation-delay: 5s;
-//   opacity: 1;
-//   transition: opacity 2s ease;
+  // Styling
+  background-color: base.$color-grey-light-1;
+  color: base.$color-grey-dark-1;
+  padding: 1.5rem 4rem 1.5rem 4rem;
+  font-family: inherit;
+  font-size: 15px;
+  border-radius: 5px;
+  animation-delay: 5s;
+  opacity: 1;
+  transition: opacity 2s ease;
 
-//   button {
-//     position: absolute;
-//     right: 5%;
-//     top: 12%;
-//     cursor: pointer;
-//     border: none;
-//     background: none;
-//   }
-// }
+  button {
+    position: absolute;
+    right: 5%;
+    top: 12%;
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
+}
