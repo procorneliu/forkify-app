@@ -10,6 +10,7 @@ export const state = {
     results: [],
   },
   bookmarks: [],
+  schedules: [],
   ingredientsList: [],
 };
 
@@ -84,6 +85,11 @@ const localStorageBookmarks = function () {
   localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
 };
 
+const localStorageSchedules = function () {
+  if (!state.schedules) return;
+  localStorage.setItem('schedules', JSON.stringify(state.schedules));
+};
+
 export const addBookmark = function (recipe) {
   state.bookmarks.push(recipe);
 
@@ -102,16 +108,28 @@ export const deleteBookmark = function (id) {
   localStorageBookmarks();
 };
 
+export const addSchedule = function (recipe) {
+  state.schedules.push(recipe);
+
+  if (recipe.id === state.recipe.id) state.recipe.scheduled = true;
+
+  localStorageSchedules();
+};
+
+export const deleteSchedule = function (id) {
+  const index = state.schedules.findIndex(el => el.id === id);
+
+  state.schedules.splice(index, 1);
+
+  if (id === state.recipe.id) state.recipe.scheduled = false;
+
+  localStorageSchedules();
+};
+
 const localStorageIngredients = function () {
   if (!state.ingredientsList) return;
   localStorage.setItem('ingredients', JSON.stringify(state.ingredientsList));
 };
-
-// export const addIngredients = function (ingredients) {
-//   state.ingredientsList.push(...ingredients);
-
-//   localStorageIngredients();
-// };
 
 export const addIngredients = function (ingredients) {
   console.log(ingredients);
@@ -131,15 +149,6 @@ export const deleteIngredient = function (index, lastIndex = 1) {
 
   localStorageIngredients();
 };
-
-const init = function () {
-  const storageBookmarks = localStorage.getItem('bookmarks');
-  const storageIngredients = localStorage.getItem('ingredients');
-
-  if (storageBookmarks) state.bookmarks = JSON.parse(storageBookmarks);
-  if (storageIngredients) state.ingredientsList = JSON.parse(storageIngredients);
-};
-init();
 
 export const uploadRecipe = async function (newRecipe) {
   try {
@@ -247,3 +256,14 @@ export const uploadRecipe = async function (newRecipe) {
 //     console.log(err.message);
 //   }
 // };
+
+const init = function () {
+  const storageBookmarks = localStorage.getItem('bookmarks');
+  const storageIngredients = localStorage.getItem('ingredients');
+  const storageSchedules = localStorage.getItem('schedules');
+
+  if (storageBookmarks) state.bookmarks = JSON.parse(storageBookmarks);
+  if (storageIngredients) state.ingredientsList = JSON.parse(storageIngredients);
+  if (storageSchedules) state.schedules = JSON.parse(storageSchedules);
+};
+init();

@@ -30,6 +30,14 @@ class RecipeView extends View {
     });
   }
 
+  addHandlerSchedule(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--schedule');
+      if (!btn) return;
+      handler();
+    });
+  }
+
   addHandlerAddToShop(handler) {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn__add--shop');
@@ -105,7 +113,7 @@ class RecipeView extends View {
         </div>
         <button class="btn--round btn--schedule">
           <svg>
-            <use href="${icons}#icon-calendar-fill"></use>
+            <use href="${icons}#icon-calendar${this._data.scheduled ? '-fill' : ''}"></use>
           </svg>
         </button>
         <button class="btn--round btn--bookmark">

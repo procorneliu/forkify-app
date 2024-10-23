@@ -16,9 +16,15 @@ export default class View {
     const markup = this._generateMarkup();
 
     if (!render) return markup;
-
     this._clear();
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
+
+    if (!this._parentElement.classList.contains('schedule__list')) return;
+
+    document
+      .querySelector('.schedule__list')
+      .querySelectorAll('li')
+      .forEach(el => el.classList.add('draggable__el'));
   }
 
   update(data) {

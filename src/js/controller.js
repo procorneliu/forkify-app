@@ -27,6 +27,7 @@ const controlRecipes = async function () {
 
     resultsView.update(model.getSearchResultsPage());
     bookmarksView.update(model.state.bookmarks);
+    scheduleView.update(model.state.schedules);
     await model.loadRecipe(id);
 
     // getting recipe nutrition data from recipe title
@@ -88,6 +89,14 @@ const controlBookmarks = function () {
 
 const controlBookmarksStorage = function () {
   bookmarksView.render(model.state.bookmarks);
+};
+
+const controlSchedules = function () {
+  if (!model.state.recipe.scheduled) model.addSchedule(model.state.recipe);
+  else model.deleteSchedule(model.state.recipe.id);
+
+  recipeView.update(model.state.recipe);
+  scheduleView.render(model.state.schedules);
 };
 
 const controlAddRecipe = async function (addRecipe) {
@@ -154,6 +163,7 @@ const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerServingsUpdate(controlServings);
   recipeView.addHandlerBookmark(controlBookmarks);
+  recipeView.addHandlerSchedule(controlSchedules);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
   addRecipeView.addHandlerUpload(controlAddRecipe);

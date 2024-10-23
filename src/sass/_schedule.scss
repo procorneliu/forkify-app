@@ -28,24 +28,26 @@
       border-radius: 0.2rem;
       z-index: 2;
 
-      .preview {
-        border-bottom: 1px solid base.$color-grey-light-2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
 
-        &__link {
-          padding: 1rem;
+      h2 {
+        margin-top: 15px;
+      }
 
-          cursor: move;
-        }
-
-        &__data {
-          display: flex;
-          color: base.$color-grey-dark-1;
-        }
+      p {
+        text-align: center;
+        max-width: 16rem;
+        padding: 10px 0;
+        margin-bottom: 10px;
+        border-bottom: 1px solid base.$color-grey-light-3;
       }
     }
 
     &__list {
       list-style: none;
+      width: 20rem;
     }
 
     #calendar {
@@ -68,6 +70,32 @@
     cursor: pointer;
     border: none;
     background: none;
+  }
+}
+
+.draggable__el {
+  width: 20rem;
+  border-bottom: 1px solid base.$color-grey-light-2;
+
+  .preview__fig {
+    height: 35px;
+    max-width: 35px;
+    margin-right: 1rem;
+  }
+  .preview__title {
+    font-size: 10px;
+    text-wrap: wrap;
+  }
+
+  .preview__link {
+    padding: 1rem;
+
+    cursor: move;
+  }
+
+  &__data {
+    display: flex;
+    color: base.$color-grey-dark-1;
   }
 }
 
@@ -100,6 +128,10 @@
     background-color: base.$color-grad-2;
   }
 
+  &-event-dragging {
+    list-style: none;
+  }
+
   &-list-event-time {
     display: none;
   }
@@ -122,11 +154,6 @@
   &-button-primary {
     font-size: 1.4rem !important;
   }
-}
-
-.draggable__el {
-  list-style: none;
-  width: 20rem;
 }
 
 :root {
