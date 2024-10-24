@@ -21,6 +21,7 @@ export default class View {
 
     if (!this._parentElement.classList.contains('schedule__list')) return;
 
+    // Adding .draggable__el class to each scheduled meal
     document
       .querySelector('.schedule__list')
       .querySelectorAll('li')
@@ -48,6 +49,12 @@ export default class View {
         });
       }
     });
+
+    // Adding .draggable__el class to each scheduled meal
+    document
+      .querySelector('.schedule__list')
+      .querySelectorAll('li')
+      .forEach(el => el.classList.add('draggable__el'));
   }
 
   _clear() {

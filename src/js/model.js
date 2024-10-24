@@ -10,8 +10,9 @@ export const state = {
     results: [],
   },
   bookmarks: [],
-  schedules: [],
   ingredientsList: [],
+  schedules: [],
+  events: [],
 };
 
 const createRecipeObject = function (data) {
@@ -35,8 +36,13 @@ export const loadRecipe = async function (id) {
 
     state.recipe = createRecipeObject(data);
 
+    // check if recipe is bookmarked
     if (state.bookmarks.some(bookmark => bookmark.id === id)) state.recipe.bookmarked = true;
     else state.recipe.bookmarked = false;
+
+    // check if recipe is scheduled
+    if (state.schedules.some(schedule => schedule.id === id)) state.recipe.scheduled = true;
+    else state.recipe.scheduled = false;
   } catch (err) {
     throw err;
   }
@@ -80,16 +86,6 @@ export const updateServings = function (newServings) {
   state.recipe.servings = newServings;
 };
 
-const localStorageBookmarks = function () {
-  if (!state.bookmarks) return;
-  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
-};
-
-const localStorageSchedules = function () {
-  if (!state.schedules) return;
-  localStorage.setItem('schedules', JSON.stringify(state.schedules));
-};
-
 export const addBookmark = function (recipe) {
   state.bookmarks.push(recipe);
 
@@ -126,14 +122,14 @@ export const deleteSchedule = function (id) {
   localStorageSchedules();
 };
 
-const localStorageIngredients = function () {
-  if (!state.ingredientsList) return;
-  localStorage.setItem('ingredients', JSON.stringify(state.ingredientsList));
+export const clearAllEvents = function () {
+  state.schedules = [];
+
+  localStorageSchedules();
 };
 
 export const addIngredients = function (ingredients) {
-  console.log(ingredients);
-  ingredients.forEach((ing, i) => {
+  ingredients.forEach(ing => {
     const existingElement = state.ingredientsList.find(el => el.description === ing.description);
 
     if (existingElement) {
@@ -148,6 +144,63 @@ export const deleteIngredient = function (index, lastIndex = 1) {
   state.ingredientsList.splice(index, lastIndex);
 
   localStorageIngredients();
+};
+
+export const addEvent = function (event) {
+  const eventID = Date.now().toString();
+  const eventHash = event.draggedEl.children[0].attributes[1].value;
+
+  state.events.push({
+    title: event.draggedEl.innerText.trim(),
+    id: eventID,
+    start: event.dateStr,
+    extendedProps: {
+      url: eventHash,
+    },
+  });
+  console.log(state.events);
+};
+
+export const updateEvent = function (event) {
+  const eventID = event.event.id;
+  const index = state.events.findIndex(ev => ev.id === eventID);
+
+  if (index < 0) return;
+
+  const changedEvent = {
+    title: event.event.title,
+    id: event.event.id,
+    start: event.event.start.toISOString().split('T')[0],
+  };
+
+  state.events[index] = changedEvent;
+
+  localStorageEvents();
+};
+
+export const getEvents = function () {
+  return state.events;
+};
+
+const localStorageBookmarks = function () {
+  if (!state.bookmarks) return;
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
+const localStorageSchedules = function () {
+  if (!state.schedules) return;
+  localStorage.setItem('schedules', JSON.stringify(state.schedules));
+};
+
+export const localStorageEvents = function () {
+  if (!state.events) return;
+
+  localStorage.setItem('events', JSON.stringify(state.events));
+};
+
+const localStorageIngredients = function () {
+  if (!state.ingredientsList) return;
+  localStorage.setItem('ingredients', JSON.stringify(state.ingredientsList));
 };
 
 export const uploadRecipe = async function (newRecipe) {
@@ -172,8 +225,6 @@ export const uploadRecipe = async function (newRecipe) {
 
         return acc;
       }, []);
-
-    // console.log(ingredients);
 
     const recipe = {
       title: newRecipe.title,
@@ -257,13 +308,19 @@ export const uploadRecipe = async function (newRecipe) {
 //   }
 // };
 
+export const removeStorage = function (item) {
+  localStorage.removeItem(item);
+};
+
 const init = function () {
   const storageBookmarks = localStorage.getItem('bookmarks');
   const storageIngredients = localStorage.getItem('ingredients');
   const storageSchedules = localStorage.getItem('schedules');
+  const storageEvents = localStorage.getItem('events');
 
   if (storageBookmarks) state.bookmarks = JSON.parse(storageBookmarks);
   if (storageIngredients) state.ingredientsList = JSON.parse(storageIngredients);
   if (storageSchedules) state.schedules = JSON.parse(storageSchedules);
+  if (storageEvents) state.events = JSON.parse(storageEvents);
 };
 init();

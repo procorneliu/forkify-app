@@ -24,7 +24,6 @@
     }
 
     &__container {
-      border: 1px solid base.$color-grey-light-2;
       border-radius: 0.2rem;
       z-index: 2;
 
@@ -32,22 +31,24 @@
       flex-direction: column;
       align-items: center;
 
-      h2 {
-        margin-top: 15px;
-      }
-
-      p {
+      h2 + p {
         text-align: center;
         max-width: 16rem;
-        padding: 10px 0;
-        margin-bottom: 10px;
-        border-bottom: 1px solid base.$color-grey-light-3;
+        padding: 1rem 0;
+      }
+
+      .error {
+        align-items: center;
+        text-align: center;
       }
     }
 
     &__list {
       list-style: none;
       width: 20rem;
+      height: 100%;
+      border: 1px solid base.$color-grey-light-2;
+      overflow-y: auto;
     }
 
     #calendar {
@@ -99,6 +100,11 @@
   }
 }
 
+.btn--schedule svg {
+  stroke: #fff;
+  fill: #fff;
+}
+
 .overlay-schedule {
   position: fixed;
   top: 0;
@@ -111,12 +117,23 @@
   transition: all 0.5s;
 }
 
+.schedules__btn__clear {
+  margin-top: 1rem;
+  color: base.$color-grad-2;
+  background: base.$color-grey-light-1;
+
+  &:hover {
+    background: base.$color-grey-light-2;
+  }
+}
+
 // Calendar styles
 .fc {
   color: base.$color-grey-dark-1;
 
   &-sticky {
     display: flex !important;
+    justify-content: center;
     align-items: center;
     text-align: center;
     text-wrap: wrap;
@@ -137,17 +154,26 @@
   }
 
   &-button {
-    &,
-    &:link,
-    &:visited {
-      @extend %btn !optional;
+    background-image: base.$gradient;
+    border-radius: 10rem;
+    border: none;
+    text-transform: uppercase;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
 
-      font-size: 1.4rem;
-      font-weight: 600;
-      padding: 1.25rem 2.25rem;
-      text-decoration: none;
-      border: none !important;
-      text-transform: uppercase !important;
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    &:focus {
+      outline: none;
+    }
+
+    & > *:first-child {
+      margin-right: 1rem;
     }
   }
 

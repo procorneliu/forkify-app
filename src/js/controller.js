@@ -9,6 +9,7 @@ import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
 import shoppingListView from './views/shoppingListView.js';
 import scheduleView from './views/scheduleView.js';
+import { Calendar } from 'fullcalendar/index.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
@@ -27,9 +28,9 @@ const controlRecipes = async function () {
 
     resultsView.update(model.getSearchResultsPage());
     bookmarksView.update(model.state.bookmarks);
-    scheduleView.update(model.state.schedules);
     await model.loadRecipe(id);
 
+    scheduleView.update(model.state.schedules);
     // getting recipe nutrition data from recipe title
     // await model.recipeNutritionData(model.state.recipe.title.split(' ')[0]);
 
@@ -91,12 +92,46 @@ const controlBookmarksStorage = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
+const removeLocalStorageItem = function (item) {
+  model.removeStorage(item);
+};
+
+const controlCalendarEventsStorage = function () {
+  scheduleView.renderCalendar(controlCalendarDrop, controlEventChange, removeLocalStorageItem, model.state.events);
+};
+
 const controlSchedules = function () {
   if (!model.state.recipe.scheduled) model.addSchedule(model.state.recipe);
   else model.deleteSchedule(model.state.recipe.id);
 
   recipeView.update(model.state.recipe);
   scheduleView.render(model.state.schedules);
+};
+
+const controlSchedulesStorage = function () {
+  scheduleView.render(model.state.schedules);
+};
+
+const controlCalendarDrop = function (event) {
+  const eventID = event.draggedEl.children[0].attributes[1].value.slice(1);
+
+  model.addEvent(event);
+
+  event.draggedEl.parentNode.removeChild(event.draggedEl);
+
+  model.deleteSchedule(eventID);
+  if ((model.state.recipe.id = eventID)) recipeView.update(model.state.recipe);
+  model.localStorageEvents();
+};
+
+const controlEventChange = function (event) {
+  model.updateEvent(event);
+};
+
+const controlClearScheduleList = function () {
+  scheduleView.renderError();
+
+  model.clearAllEvents();
 };
 
 const controlAddRecipe = async function (addRecipe) {
@@ -124,7 +159,6 @@ const controlAddRecipe = async function (addRecipe) {
 
 const controlShopList = function () {
   model.addIngredients(model.state.recipe.ingredients);
-  // console.log(model.state.recipe.ingredients);
 
   shoppingListView.render(model.state.ingredientsList);
 };
@@ -170,5 +204,8 @@ const init = function () {
   recipeView.addHandlerAddToShop(controlShopList);
   shoppingListView.addHandlerDeleteIngredient(deleteShopListElement);
   shoppingListView.addHandlerRender(controlIngredientsStorage);
+  scheduleView.addHandlerRender(controlSchedulesStorage);
+  scheduleView.addHandlerRender(controlCalendarEventsStorage);
+  scheduleView.addHandlerClearList(controlClearScheduleList);
 };
 init();

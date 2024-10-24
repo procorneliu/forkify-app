@@ -113,7 +113,7 @@ class RecipeView extends View {
         </div>
         <button class="btn--round btn--schedule">
           <svg>
-            <use href="${icons}#icon-calendar${this._data.scheduled ? '-fill' : ''}"></use>
+            <use href="${icons}#icon-calendar${this._data.scheduled ? '-fill' : '-white'}"></use>
           </svg>
         </button>
         <button class="btn--round btn--bookmark">
