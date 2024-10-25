@@ -77,8 +77,10 @@ class ScheduleView extends View {
       eventChange: function (info) {
         onEventChangeHandler(info);
       },
+      eventReceive: function (info) {
+        info.event.setExtendedProp('url', `${info.draggedEl.children[0].attributes[1].value}`);
+      },
       eventClick: function (info) {
-        console.log(info.event);
         window.open(`${window.location.origin}${info.event.extendedProps.url}`, '_self');
       },
     });

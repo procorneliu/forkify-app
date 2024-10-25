@@ -2,9 +2,9 @@ import View from './View.js';
 import icons from 'url:../../img/icons.svg';
 
 class PreviewView extends View {
+  // HTML for recipe preview, on search result, bookmarks list & schedules list
   _generateMarkup() {
     const id = window.location.hash.slice(1);
-    // <li class="preview ${this._data.scheduled ? 'draggable__el' : ''}">
     return `
         <li class="preview">
             <a class="preview__link ${this._data.id === id ? 'preview__link--active' : ''}" href="#${this._data.id}">

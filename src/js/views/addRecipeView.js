@@ -19,28 +19,35 @@ class AddRecipeView extends View {
     this.addHandlerAddIngredient();
   }
 
+  // Show window
   closeWindow() {
     this._window.classList.add('hidden');
     this._overlay.classList.add('hidden');
   }
 
+  // Hide window
   _toggleWindow() {
     this._window.classList.toggle('hidden');
     this._overlay.classList.toggle('hidden');
   }
 
+  // When 'Add Recipe' button is clicked
   _addHandlerShowWindow() {
     this._btnOpen.addEventListener('click', this._toggleWindow.bind(this));
   }
 
+  // When 'x' button or space around window is clicked
   _addHandlerCloseWindow() {
     this._btnClose.addEventListener('click', this.closeWindow.bind(this));
     this._overlay.addEventListener('click', this.closeWindow.bind(this));
   }
 
+  // Adding more ingredients input fields to add recipe functionality
   _addNewIngredient() {
+    // count of existing ingredients
     const countIng = Array.from(this._parentElement.querySelectorAll('.ingredients')).length;
 
+    // Hide '+' button, if limit of ingredients is passed
     if (countIng + 1 === MAX_INGREDIENTS) this._btnAdd.classList.add('hidden');
 
     return `
@@ -64,16 +71,7 @@ class AddRecipeView extends View {
     `;
   }
 
-  addHandlerUpload(handler) {
-    this._parentElement.addEventListener('submit', function (e) {
-      e.preventDefault();
-      const dataArr = [...new FormData(this)];
-      const data = Object.fromEntries(dataArr);
-
-      handler(data);
-    });
-  }
-
+  // When '+' button is clicked
   addHandlerAddIngredient() {
     this._btnAdd.addEventListener(
       'click',
@@ -81,6 +79,19 @@ class AddRecipeView extends View {
         this._btnAdd.insertAdjacentHTML('beforebegin', this._addNewIngredient());
       }.bind(this)
     );
+  }
+
+  // When 'Upload' button is clicked, get data for uploading to API
+  addHandlerUpload(handler) {
+    this._parentElement.addEventListener('submit', function (e) {
+      e.preventDefault();
+      // Getting data from entire form
+      const dataArr = [...new FormData(this)];
+      const data = Object.fromEntries(dataArr);
+
+      // Run function of uploading
+      handler(data);
+    });
   }
 }
 

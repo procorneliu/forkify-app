@@ -1,3 +1,4 @@
+import { LineController } from 'chart.js';
 import { API_URL, API_2_URL, RES_PER_PAGE, KEY_API_1, KEY_API_2 } from './config.js';
 import { AJAX } from './helpers.js';
 
@@ -32,8 +33,10 @@ const createRecipeObject = function (data) {
   };
 };
 
+// Load recipe view when clicking certain recipe from search results view
 export const loadRecipe = async function (id) {
   try {
+    // Fetching data
     const data = await AJAX(`${API_URL}${id}?key=${KEY_API_1}`);
 
     state.recipe = createRecipeObject(data);
@@ -72,6 +75,7 @@ export const loadSearchResults = async function (query) {
   }
 };
 
+// Data for pagination functionality: current page / all existing pages
 export const getSearchResultsPage = function (page = state.search.page) {
   state.search.page = page;
 
@@ -81,6 +85,7 @@ export const getSearchResultsPage = function (page = state.search.page) {
   return state.search.results.slice(start, end);
 };
 
+// Recalculate ingredients from servings
 export const updateServings = function (newServings) {
   state.recipe.ingredients.forEach(ing => {
     ing.quantity = ing.quantity * (newServings / state.recipe.servings);
@@ -89,14 +94,17 @@ export const updateServings = function (newServings) {
   state.recipe.servings = newServings;
 };
 
+// Add recipe to bookmarks
 export const addBookmark = function (recipe) {
   state.bookmarks.push(recipe);
 
   if (recipe.id === state.recipe.id) state.recipe.bookmarked = true;
 
-  localStorageBookmarks();
+  // Saving to local storage
+  controlLocalStorage(state.bookmarks, 'bookmarks');
 };
 
+// Delete recipe from bookmarks
 export const deleteBookmark = function (id) {
   const index = state.bookmarks.findIndex(el => el.id === id);
 
@@ -104,17 +112,21 @@ export const deleteBookmark = function (id) {
 
   if (id === state.recipe.id) state.recipe.bookmarked = false;
 
-  localStorageBookmarks();
+  // Saving to local storage
+  controlLocalStorage(state.bookmarks, 'bookmarks');
 };
 
+// Add schedule to MEALS LIST
 export const addSchedule = function (recipe) {
   state.schedules.push(recipe);
 
   if (recipe.id === state.recipe.id) state.recipe.scheduled = true;
 
-  localStorageSchedules();
+  // Saving to local storage
+  controlLocalStorage(state.schedules, 'schedules');
 };
 
+// Delete schedule from MEALS LIST
 export const deleteSchedule = function (id) {
   const index = state.schedules.findIndex(el => el.id === id);
 
@@ -122,33 +134,38 @@ export const deleteSchedule = function (id) {
 
   if (id === state.recipe.id) state.recipe.scheduled = false;
 
-  localStorageSchedules();
+  // Saving to local storage
+  controlLocalStorage(state.schedules, 'schedules');
 };
 
-export const clearAllEvents = function () {
-  state.schedules = [];
-
-  localStorageSchedules();
-};
-
+// Adding new recipe ingredients to SHOPPING list
 export const addIngredients = function (ingredients) {
   ingredients.forEach(ing => {
     const existingElement = state.ingredientsList.find(el => el.description === ing.description);
 
+    // If ingredient already exist, add quantity to existing one
     if (existingElement) {
       existingElement.quantity += ing.quantity;
     } else state.ingredientsList.push({ ...ing });
   });
 
-  localStorageIngredients();
+  // Saving to local storage
+  controlLocalStorage(state.ingredientsList, 'ingredients');
 };
 
+/**
+ * Removing ingredients from shopping list
+ * @param {Number} index - Removing from what ingredient
+ * @param {Number} lastIndex - How much ingredients delete. This param is default 1 to delete one ingredient, but can also be used to delete all ingredients
+ */
 export const deleteIngredient = function (index, lastIndex = 1) {
   state.ingredientsList.splice(index, lastIndex);
 
-  localStorageIngredients();
+  // Saving to local storage
+  controlLocalStorage(state.ingredientsList, 'ingredients');
 };
 
+// Adding new event to 'state' when dropping on calendar
 export const addEvent = function (event) {
   const eventID = Date.now().toString();
   const eventHash = event.draggedEl.children[0].attributes[1].value;
@@ -163,60 +180,43 @@ export const addEvent = function (event) {
   });
 };
 
+// Updating event data, when position on calendar is changhed
 export const updateEvent = function (event) {
   const eventID = event.event.id;
   const index = state.events.findIndex(ev => ev.id === eventID);
 
   if (index < 0) return;
 
+  // Save event, but 'start' property is changed
   const changedEvent = {
     title: event.event.title,
     id: event.event.id,
     start: event.event.start.toISOString().split('T')[0],
   };
 
+  // Saving event is same place, with new 'start' property
   state.events[index] = changedEvent;
 
-  localStorageEvents();
+  // Saving to local storage
+  controlLocalStorage(state.events, 'events');
+};
+
+// Remove all schedules and saving to localStorage
+export const clearAllSchedules = function () {
+  state.schedules = [];
+
+  // Saving to local storage
+  controlLocalStorage(state.schedules, 'schedules');
 };
 
 export const getEvents = function () {
   return state.events;
 };
 
-const controlLocalStorage = function (item) {
-  if (!item) return;
-
-  // console.log(String(item).split('.')[1]);
-  // localStorage.setItem(item, JSON.stringify(item));
-};
-controlLocalStorage(state.bookmarks);
-
-// console.log(String(state.bookmarks).split('.')[1]);
-
-console.log(state.bookmarks.name);
-
-const localStorageBookmarks = function () {
-  if (!state.bookmarks) return;
-  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
-};
-
-const localStorageSchedules = function () {
-  if (!state.schedules) return;
-  localStorage.setItem('schedules', JSON.stringify(state.schedules));
-};
-
-export const localStorageEvents = function () {
-  if (!state.events) return;
-
-  localStorage.setItem('events', JSON.stringify(state.events));
-};
-
-const localStorageIngredients = function () {
-  if (!state.ingredientsList) return;
-  localStorage.setItem('ingredients', JSON.stringify(state.ingredientsList));
-};
-
+/**
+ * Uploading recipe from 'Add Recipe' functionality to API
+ * @param {{Object}} newRecipe - Recipe to add
+ */
 export const uploadRecipe = async function (newRecipe) {
   try {
     const ingredients = Object.entries(newRecipe)
@@ -257,76 +257,54 @@ export const uploadRecipe = async function (newRecipe) {
   }
 };
 
-// export const uploadRecipe = async function (newRecipe) {
-//   try {
-//     const ingredients = Object.entries(newRecipe)
-//       .filter(entry => {
-//         entry[0].startsWith('ingredient') && entry[1] !== '';
-//         console.log(entry);
-//       })
-//       .map(ing => {
-//         const ingArr = ing[1].split(',').map(el => el.trim());
-//         // console.log(ingArr);
+// Getting nutriotion data to calculate: CALORIES, CARBS, FAT and PROTEIN
+export const recipeNutritionData = async function (query) {
+  try {
+    // Getting recipe id
+    const recipeID = await AJAX(`${API_2_URL}recipes/complexSearch?query=${query}&number=1&includeNutrition=true&apiKey=${KEY_API_2}`);
 
-//         if (ingArr.length !== 3) throw new Error('Wrong data format. Please enter correct one!');
+    const id = recipeID.results[0].id;
 
-//         const [quantity, unit, description] = ingArr;
+    // // Search for product nutrients information
+    const productData = await AJAX(`${API_2_URL}recipes/${id}/nutritionWidget.json?apiKey=${KEY_API_2}`);
 
-//         return { quantity: quantity ? +quantity : null, unit, description };
-//       });
-//     const recipe = {
-//       title: newRecipe.title,
-//       source_url: newRecipe.sourceUrl,
-//       image_url: newRecipe.image,
-//       publisher: newRecipe.publisher,
-//       cooking_time: +newRecipe.cookingTime,
-//       servings: +newRecipe.servings,
-//       ingredients,
-//     };
+    // Saving in structured format, only necesary data
+    const nutritionData = {
+      calories: productData.calories,
+      carbs: productData.carbs,
+      fat: productData.fat,
+      protein: productData.protein,
+      caloricBreakdown: {
+        percentCarbs: productData.caloricBreakdown.percentCarbs,
+        percentFat: productData.caloricBreakdown.percentFat,
+        percentProtein: productData.caloricBreakdown.percentProtein,
+      },
+    };
 
-//     const data = await AJAX(`${API_URL}?key=${KEY_API_1}`, recipe);
-//     state.recipe = createRecipeObject(data);
-//     addBookmark(state.recipe);
-//     // console.log(state.recipe);
-//   } catch (err) {
-//     throw err;
-//   }
-// };
+    // Save nutrition data in recipe object
+    state.recipe.nutrition = nutritionData;
+  } catch (err) {
+    console.log(err.message);
+  }
+};
 
-// export const recipeNutritionData = async function (query) {
-//   try {
-//     // Getting recipe id
-//     const recipeID = await AJAX(`${API_2_URL}recipes/complexSearch?query=${query}&number=1&includeNutrition=true&apiKey=${KEY_API_2}`);
-
-//     const id = recipeID.results[0].id;
-
-//     // // Search for product nutrients information
-//     const productData = await AJAX(`${API_2_URL}recipes/${id}/nutritionWidget.json?apiKey=${KEY_API_2}`);
-
-//     const nutritionData = {
-//       calories: productData.calories,
-//       carbs: productData.carbs,
-//       fat: productData.fat,
-//       protein: productData.protein,
-//       caloricBreakdown: {
-//         percentCarbs: productData.caloricBreakdown.percentCarbs,
-//         percentFat: productData.caloricBreakdown.percentFat,
-//         percentProtein: productData.caloricBreakdown.percentProtein,
-//       },
-//     };
-
-//     // Save nutrition data in recipe object
-//     state.recipe.nutrition = nutritionData;
-//   } catch (err) {
-//     console.log(err.message);
-//   }
-// };
+/**
+ *
+ * @param {Object.path} path - Path to object 'state' that will be stored
+ * @param {string} storageItem - Path destination in string format
+ * @returns
+ */
+export const controlLocalStorage = function (path, storageItem) {
+  if (!path) return;
+  localStorage.setItem(storageItem, JSON.stringify(path));
+};
 
 // Remove a certain item from local storage
 export const removeStorage = function (item) {
   localStorage.removeItem(item);
 };
 
+// Initialization function
 // Getting and render dates saved in local storage
 const init = function () {
   const storageBookmarks = localStorage.getItem('bookmarks');

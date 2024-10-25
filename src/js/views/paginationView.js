@@ -4,6 +4,7 @@ import icons from 'url:../../img/icons.svg';
 class PaginationView extends View {
   _parentElement = document.querySelector('.pagination');
 
+  // When buttons from pagination is clicked, go to prev/next page
   addHandlerClick(handler) {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--inline');
@@ -14,17 +15,16 @@ class PaginationView extends View {
     });
   }
 
+  // Generating pagination view
   _generateMarkup() {
     const curPage = +this._data.page;
     const numPages = Math.ceil(this._data.results.length / this._data.resultsPerPage);
 
     // page 1, there is other pages
-    if (curPage === 1 && numPages > 1)
-      return this._generatePagesCount(curPage, numPages).concat(this._generateMarkupNext(curPage));
+    if (curPage === 1 && numPages > 1) return this._generatePagesCount(curPage, numPages).concat(this._generateMarkupNext(curPage));
 
     // last page
-    if (curPage === numPages && numPages > 1)
-      return this._generateMarkupPrev(curPage).concat(this._generatePagesCount(curPage, numPages));
+    if (curPage === numPages && numPages > 1) return this._generateMarkupPrev(curPage).concat(this._generatePagesCount(curPage, numPages));
 
     // other page
     if (curPage > 1)
@@ -36,6 +36,7 @@ class PaginationView extends View {
     return '';
   }
 
+  // HTML  for previous button
   _generateMarkupPrev(curPage) {
     return `
             <button data-goto="${curPage - 1}" class="btn--inline pagination__btn--prev">
@@ -47,6 +48,7 @@ class PaginationView extends View {
         `;
   }
 
+  // HTML for next button
   _generateMarkupNext(curPage) {
     return `
             <button data-goto="${curPage + 1}" class="btn--inline pagination__btn--next">
@@ -58,6 +60,7 @@ class PaginationView extends View {
         `;
   }
 
+  // HTML for pages count
   _generatePagesCount(curPage, totalPages) {
     return `
             <div>

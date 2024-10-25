@@ -1,5 +1,6 @@
 import { TIMEOUT_SEC } from './config';
 
+// Throw error meesage if request took too long
 const timeout = function (s) {
   return new Promise(function (_, reject) {
     setTimeout(function () {
@@ -8,17 +9,20 @@ const timeout = function (s) {
   });
 };
 
+// Requesting or posting data to API
 export const AJAX = async function (url, uploadData = undefined) {
   try {
     const fetchPro = uploadData
-      ? fetch(url, {
+      ? // If uploadData is defined, load recipe to API
+        fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(uploadData),
         })
-      : fetch(url);
+      : // If not, get data from API
+        fetch(url);
     const res = await Promise.race([fetchPro, timeout(TIMEOUT_SEC)]);
     const data = await res.json();
 

@@ -8,10 +8,12 @@ class RecipeView extends View {
   _errorMessage = 'We could not find this product. Please try again!';
   _message = '';
 
+  // When page link is changed
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
 
+  // Handler to change servings number
   addHandlerServingsUpdate(handler) {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--update-servings');
@@ -22,14 +24,7 @@ class RecipeView extends View {
     });
   }
 
-  addHandlerBookmark(handler) {
-    this._parentElement.addEventListener('click', function (e) {
-      const btn = e.target.closest('.btn--bookmark');
-      if (!btn) return;
-      handler();
-    });
-  }
-
+  // Handler for toggling recipe SCHEDULE status
   addHandlerSchedule(handler) {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn--schedule');
@@ -38,6 +33,16 @@ class RecipeView extends View {
     });
   }
 
+  // Handler for toggling recipe BOOKMARK status
+  addHandlerBookmark(handler) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest('.btn--bookmark');
+      if (!btn) return;
+      handler();
+    });
+  }
+
+  // Handler for adding all ingredients from recipe to SHOPPING list
   addHandlerAddToShop(handler) {
     this._parentElement.addEventListener('click', function (e) {
       const btn = e.target.closest('.btn__add--shop');
@@ -128,6 +133,12 @@ class RecipeView extends View {
         <ul class="recipe__ingredient-list">
           ${this._data.ingredients.map(this._generateMarkupIngredinet).join('')}
         </ul>
+        <button class="btn--small recipe__btn btn__add--shop">
+          <span>Add to shopping list</span>
+          <svg class="search__icon">
+            <use href="${icons}#icon-plus-circle"></use>
+          </svg>
+        </button>
       </div>
 
       ${this._generateMarkupNutrition()}
@@ -177,60 +188,55 @@ class RecipeView extends View {
             <p>Protein: <span>4</span></p>
           </div>
         </div>
-        <button class="btn--small recipe__btn btn__add--shop">
-          <span>Add to shopping list</span>
-          <svg class="search__icon">
-            <use href="${icons}#icon-plus-circle"></use>
-          </svg>
-        </button>
       </div>`;
   }
-  // _generateMarkupNutrition() {
-  //   return `
-  //     <div class="recipe__nutrition">
-  //       <h2 class="heading--2">Nutrition Data</h2>
-  //       <div class="nutrition__data">
-  //         <canvas id="nutrition_chart"></canvas>
-  //         <div class="nutrition__quantity">
-  //           <p class="calories__text">Calories:</p>
-  //           <span class="calories__data">${this._data.nutrition.calories}</span>
-  //           <hr>
-  //           <p>Carbs: <span>${this._data.nutrition.carbs} - ${this._data.nutrition.caloricBreakdown.percentCarbs}%</span></p>
-  //           <p>Fat: <span>${this._data.nutrition.fat} - ${this._data.nutrition.caloricBreakdown.percentFat}%</span></p>
-  //           <p>Protein: <span>${this._data.nutrition.protein} - ${this._data.nutrition.caloricBreakdown.percentProtein}%</span></p>
-  //         </div>
-  //       </div>
-  //     </div>`;
-  // }
 
-  // generateNutritionChart() {
-  //   const _canvas = document.getElementById('nutrition_chart');
+  _generateMarkupNutrition() {
+    return `
+      <div class="recipe__nutrition">
+        <h2 class="heading--2">Nutrition Data</h2>
+        <div class="nutrition__data">
+          <canvas id="nutrition_chart"></canvas>
+          <div class="nutrition__quantity">
+            <p class="calories__text">Calories:</p>
+            <span class="calories__data">${this._data.nutrition.calories}</span>
+            <hr>
+            <p>Carbs: <span>${this._data.nutrition.carbs} - ${this._data.nutrition.caloricBreakdown.percentCarbs}%</span></p>
+            <p>Fat: <span>${this._data.nutrition.fat} - ${this._data.nutrition.caloricBreakdown.percentFat}%</span></p>
+            <p>Protein: <span>${this._data.nutrition.protein} - ${this._data.nutrition.caloricBreakdown.percentProtein}%</span></p>
+          </div>
+        </div>
+      </div>`;
+  }
 
-  //   // Get rid of error reusing canvas
-  //   if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
+  generateNutritionChart() {
+    const _canvas = document.getElementById('nutrition_chart');
 
-  //   const chart = new Chart(_canvas, {
-  //     type: 'doughnut',
-  //     data: {
-  //       labels: ['Carbs', 'Fat', 'Protein'],
-  //       datasets: [
-  //         {
-  //           label: 'Nutrition Breakdown',
-  //           data: [
-  //             this._data.nutrition.caloricBreakdown.percentCarbs,
-  //             this._data.nutrition.caloricBreakdown.percentFat,
-  //             this._data.nutrition.caloricBreakdown.percentProtein,
-  //           ],
-  //           backgroundColor: ['#d3c7c3', '#f48982', '#fbdb89'],
-  //           hoverOffset: 4,
-  //         },
-  //       ],
-  //     },
-  //     options: {
-  //       responsive: true,
-  //     },
-  //   });
-  // }
+    // Get rid of error reusing canvas
+    if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
+
+    const chart = new Chart(_canvas, {
+      type: 'doughnut',
+      data: {
+        labels: ['Carbs', 'Fat', 'Protein'],
+        datasets: [
+          {
+            label: 'Nutrition Breakdown',
+            data: [
+              this._data.nutrition.caloricBreakdown.percentCarbs,
+              this._data.nutrition.caloricBreakdown.percentFat,
+              this._data.nutrition.caloricBreakdown.percentProtein,
+            ],
+            backgroundColor: ['#d3c7c3', '#f48982', '#fbdb89'],
+            hoverOffset: 4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+      },
+    });
+  }
 }
 
 export default new RecipeView();
