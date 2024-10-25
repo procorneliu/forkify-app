@@ -1,6 +1,7 @@
 import { API_URL, API_2_URL, RES_PER_PAGE, KEY_API_1, KEY_API_2 } from './config.js';
 import { AJAX } from './helpers.js';
 
+// Here is sorted all DATES
 export const state = {
   recipe: {},
   search: {
@@ -15,6 +16,7 @@ export const state = {
   events: [],
 };
 
+// Make data of create recipe more structured
 const createRecipeObject = function (data) {
   const { recipe } = data.data;
   return {
@@ -48,6 +50,7 @@ export const loadRecipe = async function (id) {
   }
 };
 
+// When searching for recipe in search field
 export const loadSearchResults = async function (query) {
   try {
     state.search.query = query;
@@ -158,7 +161,6 @@ export const addEvent = function (event) {
       url: eventHash,
     },
   });
-  console.log(state.events);
 };
 
 export const updateEvent = function (event) {
@@ -181,6 +183,18 @@ export const updateEvent = function (event) {
 export const getEvents = function () {
   return state.events;
 };
+
+const controlLocalStorage = function (item) {
+  if (!item) return;
+
+  // console.log(String(item).split('.')[1]);
+  // localStorage.setItem(item, JSON.stringify(item));
+};
+controlLocalStorage(state.bookmarks);
+
+// console.log(String(state.bookmarks).split('.')[1]);
+
+console.log(state.bookmarks.name);
 
 const localStorageBookmarks = function () {
   if (!state.bookmarks) return;
@@ -308,10 +322,12 @@ export const uploadRecipe = async function (newRecipe) {
 //   }
 // };
 
+// Remove a certain item from local storage
 export const removeStorage = function (item) {
   localStorage.removeItem(item);
 };
 
+// Getting and render dates saved in local storage
 const init = function () {
   const storageBookmarks = localStorage.getItem('bookmarks');
   const storageIngredients = localStorage.getItem('ingredients');
