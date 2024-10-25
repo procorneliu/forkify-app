@@ -28,6 +28,7 @@ export default class View {
       .forEach(el => el.classList.add('draggable__el'));
   }
 
+  // No need of reloading page. Update view if any data from view are changed.
   update(data) {
     this._data = data;
     const newMarkup = this._generateMarkup();
@@ -57,10 +58,12 @@ export default class View {
       .forEach(el => el.classList.add('draggable__el'));
   }
 
+  // Clear view
   _clear() {
     this._parentElement.innerHTML = '';
   }
 
+  // Render load icon
   renderSpinner() {
     const markup = `
       <div class="spinner">
@@ -73,6 +76,7 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  // Render eror message
   renderError(message = this._errorMessage) {
     const markup = `
         <div class="error">
@@ -87,6 +91,7 @@ export default class View {
     this._parentElement.insertAdjacentHTML('afterbegin', markup);
   }
 
+  // Render normal message
   renderMessage(message = this._message) {
     const markup = `
         <div class="message">

@@ -1,13 +1,12 @@
 import View from './View';
 import previewView from './previewView.js';
+import full from 'core-js/full';
 
 // Importing calendar
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
-import full from 'core-js/full';
-import { EventContainer } from '@fullcalendar/core/internal';
 
 class ScheduleView extends View {
   _parentElement = document.querySelector('.schedule__list');
@@ -29,7 +28,53 @@ class ScheduleView extends View {
     this._addHandlerCloseWindow();
   }
 
+  // Generatig HTML for previewing recipes on MEALS LIST
+  _generateMarkup() {
+    return this._data.map(schedule => previewView.render(schedule, false)).join('');
+  }
+
+  // Handler when page is loaded
+  addHandlerRender(handler) {
+    window.addEventListener('load', handler);
+  }
+
+  // Handler for 'Clear List' button
+  addHandlerClearList(handler) {
+    this._btnClearList.addEventListener('click', handler);
+  }
+
+  // Show window
+  _toggleWindow() {
+    this._overlay.classList.toggle('hidden');
+    this._containerEl.classList.toggle('hidden');
+  }
+
+  // Hide window
+  _closeWindow() {
+    this._overlay.classList.add('hidden');
+    this._containerEl.classList.add('hidden');
+  }
+
+  // When 'Schedule' button is clicked
+  _addHandlerShowWindow() {
+    this._btnOpen.addEventListener('click', this._toggleWindow.bind(this));
+  }
+
+  // When 'x' button or space around window is clicked
+  _addHandlerCloseWindow() {
+    this._btnClose.addEventListener('click', this._closeWindow.bind(this));
+    this._overlay.addEventListener('click', this._closeWindow.bind(this));
+  }
+
+  /**
+   * // RENDERING CALENDAR
+   * @param onDropHandler - function(), when an event is dropped on calendar.
+   * @param onEventChangeHandler - function(), when event position is changed on calendar.
+   * @param onRemoveEventsHandler - function(), when clicking button "Delete All Event" to remove all events and from local storage too.
+   * @param storedEvents - path/, getting events that are stored in 'state' to display them on calendar
+   */
   renderCalendar(onDropHandler, onEventChangeHandler, onRemoveEventsHandler, storedEvents) {
+    // Make recipe lists from container to be draggable
     let draggable = new Draggable(this._containerEl, {
       itemSelector: '.draggable__el',
       eventData: function (eventEl) {
@@ -39,6 +84,7 @@ class ScheduleView extends View {
       },
     });
 
+    // Creating new calendar with specified options
     let calendar = new Calendar(this._calendarEl, {
       plugins: [dayGridPlugin, listPlugin, interactionPlugin],
       timeZone: 'UTC',
@@ -71,51 +117,27 @@ class ScheduleView extends View {
       eventDurationEditable: false,
       fixedMirrorParent: document.body,
       events: storedEvents,
+      // When new event is dropped on calendar, firest this
       drop: function (info) {
         onDropHandler(info);
       },
+      // When existing event position is changed, fires this
       eventChange: function (info) {
         onEventChangeHandler(info);
       },
+      // When calendar receive a new event, almost exactly as DROP handler above
       eventReceive: function (info) {
+        // Setting url for each dropped calendar
         info.event.setExtendedProp('url', `${info.draggedEl.children[0].attributes[1].value}`);
       },
+      // When event from calendar is clicked
       eventClick: function (info) {
+        // Open page of event
         window.open(`${window.location.origin}${info.event.extendedProps.url}`, '_self');
       },
     });
+    // Render calendar itself
     calendar.render();
-  }
-
-  addHandlerRender(handler) {
-    window.addEventListener('load', handler);
-  }
-
-  addHandlerClearList(handler) {
-    this._btnClearList.addEventListener('click', handler);
-  }
-
-  _generateMarkup() {
-    return this._data.map(schedule => previewView.render(schedule, false)).join('');
-  }
-
-  _toggleWindow() {
-    this._overlay.classList.toggle('hidden');
-    this._containerEl.classList.toggle('hidden');
-  }
-
-  _closeWindow() {
-    this._overlay.classList.add('hidden');
-    this._containerEl.classList.add('hidden');
-  }
-
-  _addHandlerShowWindow() {
-    this._btnOpen.addEventListener('click', this._toggleWindow.bind(this));
-  }
-
-  _addHandlerCloseWindow() {
-    this._btnClose.addEventListener('click', this._closeWindow.bind(this));
-    this._overlay.addEventListener('click', this._closeWindow.bind(this));
   }
 }
 

@@ -2,7 +2,6 @@ import icons from 'url:../../img/icons.svg';
 import View from './View';
 import { mark } from 'regenerator-runtime';
 import Fraction from 'fraction.js';
-import { LineController } from 'chart.js';
 
 class ShoppingListView extends View {
   _parentElement = document.querySelector('.shop__list');
@@ -15,20 +14,17 @@ class ShoppingListView extends View {
     window.addEventListener('load', handler);
   }
 
+  // HTML for SHOPPING list view
   _generateMarkup() {
     return this._generateMarkupShopList().concat(this._generateMarkupButtons());
   }
 
+  // Display for how much ingredients are in SHOPPING list.
   _shopCount(count = 0) {
     this._shopCountContainer.textContent = count;
   }
 
-  //   _getDescriptionOfElement() {
-  //     this._parentElement.addEventListener('click', function (e) {
-  //       const txtContent = e.target.closest('.remove__ingredient').parentElement.lastChild.textContent;
-  //     });
-  //   }
-
+  // HTML for ingredients list
   _generateMarkupShopList() {
     let html = this._data.reduce((acc, curr) => {
       if (!curr.description.includes(':')) {
@@ -49,6 +45,7 @@ class ShoppingListView extends View {
     return html;
   }
 
+  // HTML for buttons on SHOPPING list view
   _generateMarkupButtons() {
     return `
         <div class="shop__btn">
@@ -65,6 +62,7 @@ class ShoppingListView extends View {
         </div>`;
   }
 
+  // Handler for 'Clear List' button
   addHandlerClearList(handler) {
     this._parentElement.addEventListener(
       'click',
@@ -78,6 +76,7 @@ class ShoppingListView extends View {
     );
   }
 
+  // Handler when 'x' button from one of ingredients is clicked. Delete ingredient itself
   addHandlerDeleteIngredient(handler) {
     this._parentElement.addEventListener(
       'click',
@@ -85,14 +84,18 @@ class ShoppingListView extends View {
         const btn = e.target.closest('.remove__ingredient');
         if (!btn) return;
 
+        // Getting ingredient that was clicked
         const item = btn.closest('li');
 
         const listItems = Array.from(this._parentElement.querySelectorAll('li'));
 
+        // Index of clicked ingredient
         const index = listItems.indexOf(item);
 
+        // Removing that ingredient
         item.remove();
 
+        // Update ingredients number
         const length = this._parentElement.querySelectorAll('li').length;
         this._shopCount(length);
 

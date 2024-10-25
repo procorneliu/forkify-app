@@ -13,6 +13,15 @@ class RecipeView extends View {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
 
+  // Do function from HANDLER when BUTTON is clicked,
+  _addControlHandler(handler, button) {
+    this._parentElement.addEventListener('click', function (e) {
+      const btn = e.target.closest(button);
+      if (!btn) return;
+      handler();
+    });
+  }
+
   // Handler to change servings number
   addHandlerServingsUpdate(handler) {
     this._parentElement.addEventListener('click', function (e) {
@@ -26,20 +35,12 @@ class RecipeView extends View {
 
   // Handler for toggling recipe SCHEDULE status
   addHandlerSchedule(handler) {
-    this._parentElement.addEventListener('click', function (e) {
-      const btn = e.target.closest('.btn--schedule');
-      if (!btn) return;
-      handler();
-    });
+    this._addControlHandler(handler, '.btn--schedule');
   }
 
   // Handler for toggling recipe BOOKMARK status
   addHandlerBookmark(handler) {
-    this._parentElement.addEventListener('click', function (e) {
-      const btn = e.target.closest('.btn--bookmark');
-      if (!btn) return;
-      handler();
-    });
+    this._addControlHandler(handler, '.btn--bookmark');
   }
 
   // Handler for adding all ingredients from recipe to SHOPPING list
@@ -48,6 +49,7 @@ class RecipeView extends View {
       const btn = e.target.closest('.btn__add--shop');
       if (!btn) return;
 
+      // HTML to put when "ADD TO SHOPPING LIST" is clicked
       const html = `
         <span>Added to list</span>
         <svg class="search__icon">
@@ -58,6 +60,7 @@ class RecipeView extends View {
       btn.innerHTML = '';
       btn.insertAdjacentHTML('afterbegin', html);
 
+      // Button will be clickable after timeout
       setTimeout(function () {
         const html = `
           <span>Add to shopping list</span>
@@ -74,6 +77,7 @@ class RecipeView extends View {
     });
   }
 
+  // HTML for recipe page
   _generateMarkup() {
     return `
       <figure class="recipe__fig">
@@ -131,7 +135,7 @@ class RecipeView extends View {
       <div class="recipe__ingredients">
         <h2 class="heading--2">Recipe ingredients</h2>
         <ul class="recipe__ingredient-list">
-          ${this._data.ingredients.map(this._generateMarkupIngredinet).join('')}
+          ${this._data.ingredients.map(this._generateMarkupIngredient).join('')}
         </ul>
         <button class="btn--small recipe__btn btn__add--shop">
           <span>Add to shopping list</span>
@@ -160,7 +164,8 @@ class RecipeView extends View {
     `;
   }
 
-  _generateMarkupIngredinet(ing) {
+  // HTML for ingredients view
+  _generateMarkupIngredient(ing) {
     return `<li class="recipe__ingredient">
                 <svg class="recipe__icon">
                   <use href="${icons}#icon-check"></use>
@@ -173,24 +178,7 @@ class RecipeView extends View {
             </li>`;
   }
 
-  _generateMarkupNutrition() {
-    return `
-      <div class="recipe__nutrition">
-        <h2 class="heading--2">Nutrition Data</h2>
-        <div class="nutrition__data">
-          <canvas id="nutrition_chart"></canvas>
-          <div class="nutrition__quantity">
-            <p class="calories__text">Calories:</p>
-            <span class="calories__data">1</span>
-            <hr>
-            <p>Carbs: <span>2</span></p>
-            <p>Fat: <span>3</span></p>
-            <p>Protein: <span>4</span></p>
-          </div>
-        </div>
-      </div>`;
-  }
-
+  // HTML for Nutrition Data
   _generateMarkupNutrition() {
     return `
       <div class="recipe__nutrition">
@@ -209,6 +197,7 @@ class RecipeView extends View {
       </div>`;
   }
 
+  // Put all Nutrition Data in CHART format. Used extension: Chart.js
   generateNutritionChart() {
     const _canvas = document.getElementById('nutrition_chart');
 
