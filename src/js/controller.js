@@ -41,8 +41,6 @@ const controlRecipes = async function () {
     // Rendering current recipe to the page
     recipeView.render(model.state.recipe);
 
-    console.log(model.state.recipe);
-    console.log(model.state.recipe.nutrition);
     // Getting chart rendered at the end of recipe page load
     try {
       recipeView.generateNutritionChart(model.state.recipe.nutrition);
