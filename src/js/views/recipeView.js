@@ -198,7 +198,7 @@ class RecipeView extends View {
   }
 
   // Put all Nutrition Data in CHART format. Used extension: Chart.js
-  generateNutritionChart() {
+  generateNutritionChart(recipeNutrition) {
     const _canvas = document.getElementById('nutrition_chart');
 
     // Get rid of error reusing canvas
@@ -212,9 +212,9 @@ class RecipeView extends View {
           {
             label: 'Nutrition Breakdown',
             data: [
-              this._data.nutrition.caloricBreakdown.percentCarbs,
-              this._data.nutrition.caloricBreakdown.percentFat,
-              this._data.nutrition.caloricBreakdown.percentProtein,
+              recipeNutrition.caloricBreakdown.percentCarbs,
+              recipeNutrition.caloricBreakdown.percentFat,
+              recipeNutrition.caloricBreakdown.percentProtein,
             ],
             backgroundColor: ['#d3c7c3', '#f48982', '#fbdb89'],
             hoverOffset: 4,
