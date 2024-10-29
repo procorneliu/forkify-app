@@ -9,17 +9,14 @@ import bookmarksView from './views/bookmarksView.js';
 import addRecipeView from './views/addRecipeView.js';
 import shoppingListView from './views/shoppingListView.js';
 import scheduleView from './views/scheduleView.js';
-import { Calendar } from 'fullcalendar/index.js';
-import { Chart } from 'chart.js/auto';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
-import { clearCanvas } from 'chart.js/helpers';
 
-// Hot module, reloading changes on page without page reload
-if (module.hot) {
-  module.hot.accept();
-}
+// // Hot module, reloading changes on page without page reload
+// if (module.hot) {
+//   module.hot.accept();
+// }
 
 // Loading current recipe view
 const controlRecipes = async function () {

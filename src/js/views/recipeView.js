@@ -1,7 +1,7 @@
 import icons from 'url:../../img/icons.svg';
 import Fraction from 'fraction.js';
 import View from './View.js';
-import { Chart } from 'chart.js/auto';
+import Chart from 'chart.js/auto';
 
 class RecipeView extends View {
   _parentElement = document.querySelector('.recipe');
