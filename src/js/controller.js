@@ -14,6 +14,7 @@ import { Chart } from 'chart.js/auto';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { clearCanvas } from 'chart.js/helpers';
 
 // Hot module, reloading changes on page without page reload
 if (module.hot) {
