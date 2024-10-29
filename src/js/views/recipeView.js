@@ -202,7 +202,7 @@ class RecipeView extends View {
     const _canvas = document.getElementById('nutrition_chart');
 
     // Get rid of error reusing canvas
-    if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
+    // if (Chart.getChart(_canvas)) Chart.getChart(_canvas).destroy();
 
     const chart = new Chart(_canvas, {
       type: 'doughnut',
